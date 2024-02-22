@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        form.addEventListener("submit", function (e) {
+          e.preventDefault(); // Prevent the default form submission
+
+          const formData = new FormData(form);
+          const username = formData.get("username");
+          const password = formData.get("password");
+
+          fetch("/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status == "success") {
+                location.href = "index.html";
+              } else {
+                alert(`Error ${JSON.stringify(data.message)}`);
+              }
+            })
+            .catch((error) => {
+              alert(`Error ${JSON.stringify(error.message)}`);
+            });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Login</h1>
+    <form action="/login" method="post">
+      <input type="text" name="username" id="username" />
+      <input type="password" name="password" id="password" />
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
